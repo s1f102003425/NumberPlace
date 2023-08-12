@@ -19,16 +19,26 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
   const [gameBoard, setGameBoard] = useState<number[][]>(nomalBoard);
+  const checkRowNumber = (subX: number, subY: number, creatingBoard: number[][]) => {
+    const i: number = Math.floor(Math.random() * 10);
+    if (i !== 0 && !creatingBoard[subY].includes(i)) {
+      creatingBoard[subY][subX] = i;
+    } else {
+      checkRowNumber(subX, subY, creatingBoard);
+    }
+  };
   const createClick = () => {
-    const newGameBoard = JSON.parse(JSON.stringify(gameBoard));
-    for (let x = 0; x < 9; x++) {
-      for (let y = 0; y < 9; y++) {
-        const i: number = Math.floor(Math.random() * 10);
-        // const i = 2;
-        newGameBoard[y][x] = i;
+    const newGameBoard: number[][] = JSON.parse(JSON.stringify(gameBoard));
+    for (let y = 0; y < 9; y++) {
+      for (let x = 0; x < 9; x++) {
+        checkRowNumber(x, y, newGameBoard);
       }
     }
     setGameBoard(newGameBoard);
+  };
+
+  const resetClick = () => {
+    setGameBoard(nomalBoard);
   };
   console.table(gameBoard);
 
@@ -46,7 +56,9 @@ const Home = () => {
         )}
       </div>
       <p className={styles['button-board']}>
-        <div className={styles['reset-bottun']}>リセット</div>
+        <div className={styles['reset-bottun']} onClick={resetClick}>
+          リセット
+        </div>
         <div className={styles['create-button']} onClick={createClick}>
           生成
         </div>
