@@ -15,10 +15,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "types": ["vitest/importMeta"],
-    "incremental": true,
-    "baseUrl": ".", 
-    "paths": {
-      "$/*": ["*"]
-  },
+    "incremental": true
+    
   },"include": ["**/*.ts", "**/*.tsx", "*.js", ".eslintrc.js"]
 }
