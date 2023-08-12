@@ -1,4 +1,3 @@
-import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { Loading } from 'src/components/Loading/Loading';
 import { apiClient } from 'src/utils/apiClient';
@@ -22,6 +21,7 @@ const Home = () => {
   ];
   const [isPlaying, setIsPlaying] = useState(false);
   const [timeCount, setTimeCount] = useState(0);
+  const [gameBoard, setGameBoard] = useState<number[][]>(nomalBoard);
   useEffect(() => {
     if (isPlaying) {
       const plusTimeCount = setInterval(() => {
@@ -32,7 +32,6 @@ const Home = () => {
       };
     }
   }, [timeCount, isPlaying]);
-  const [gameBoard, setGameBoard] = useState<number[][]>(nomalBoard);
   const checkRowNumber = (subX: number, subY: number, creatingBoard: number[][]) => {
     const i: number = Math.floor(Math.random() * 10);
     if (i !== 0 && !creatingBoard[subY].includes(i)) {

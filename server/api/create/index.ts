@@ -1,4 +1,3 @@
-import type { UserId } from '$/commonTypesWithClient/branded';
 import type { RoomModel } from '$/commonTypesWithClient/models';
 import type { DefineMethods } from 'aspida';
 
