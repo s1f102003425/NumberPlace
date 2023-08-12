@@ -1,8 +1,16 @@
+.time {
+  width: 450px;
+  height: 50px;
+  text-align: center;
+  background-color: bisque;
+  color: black;
+  font-size: 30px;
+}
+
 .game-board {
   width: 450px;
   height: 450px;
   background-color: beige;
-  font-size: 0;
 }
 
 .cell {
@@ -15,6 +23,8 @@
 .value {
   width: 48px;
   height: 48px;
+  text-align: center;
+  font-size: 30px;
   color: black;
 }
 
