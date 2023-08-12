@@ -1,3 +1,12 @@
+.time {
+  width: 450px;
+  height: 50px;
+  text-align: center;
+  background-color: bisque;
+  color: black;
+  font-size: 30px;
+}
+
 .game-board {
   width: 450px;
   height: 450px;
