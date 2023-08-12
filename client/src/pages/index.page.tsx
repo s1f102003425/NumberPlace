@@ -19,19 +19,30 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
   const [gameBoard, setGameBoard] = useState<number[][]>(nomalBoard);
-  const checkRowNumber = (subX: number, subY: number, creatingBoard: number[][]) => {
-    const i: number = Math.floor(Math.random() * 10);
-    if (i !== 0 && !creatingBoard[subY].includes(i)) {
-      creatingBoard[subY][subX] = i;
-    } else {
-      checkRowNumber(subX, subY, creatingBoard);
+  const checkColNumbers = (colIdx: number, creatingBoard: number[][]) => {
+    const colNumbers = creatingBoard.map((row) => row[colIdx]);
+    for (let i = 1; i <= 9; i++) {
+      if (!colNumbers.includes(i)) {
+        return i;
+      }
     }
+    return 0;
+  };
+  const checkRowNumbers = (row: number[]) => {
+    for (let i = 1; i <= 9; i++) {
+      if (!row.includes(i)) {
+        return i;
+      }
+    }
+    return 0;
   };
   const createClick = () => {
     const newGameBoard: number[][] = JSON.parse(JSON.stringify(gameBoard));
     for (let y = 0; y < 9; y++) {
       for (let x = 0; x < 9; x++) {
-        checkRowNumber(x, y, newGameBoard);
+        const rowNumber = checkRowNumbers(newGameBoard[y]);
+        const colNumber = checkColNumbers(x, newGameBoard);
+        newGameBoard[y][x] = Math.min(rowNumber, colNumber);
       }
     }
     setGameBoard(newGameBoard);
@@ -50,7 +61,7 @@ const Home = () => {
         {gameBoard.map((row, y) =>
           row.map((value, x) => (
             <div className={styles.cell} key={`${x}-${y}`}>
-              <div className={styles.value}>{value ? value : 0}</div>
+              <div className={styles.value}>{value}</div>
             </div>
           ))
         )}
