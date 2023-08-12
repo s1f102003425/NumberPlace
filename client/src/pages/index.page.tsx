@@ -19,7 +19,17 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
   const [gameBoard, setGameBoard] = useState<number[][]>(nomalBoard);
-  // const startClick
+  const createClick = () => {
+    const newGameBoard = JSON.parse(JSON.stringify(gameBoard));
+    for (let x = 0; x < 9; x++) {
+      for (let y = 0; y < 9; y++) {
+        const i: number = Math.floor(Math.random() * 10);
+        // const i = 2;
+        newGameBoard[y][x] = i;
+      }
+    }
+    setGameBoard(newGameBoard);
+  };
   console.table(gameBoard);
 
   if (!hoge) return <Loading visible />;
@@ -37,7 +47,9 @@ const Home = () => {
       </div>
       <p className={styles['button-board']}>
         <div className={styles['reset-bottun']}>リセット</div>
-        <div className={styles['create-button']}>生成</div>
+        <div className={styles['create-button']} onClick={createClick}>
+          生成
+        </div>
       </p>
     </>
   );
