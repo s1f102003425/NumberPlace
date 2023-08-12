@@ -58,3 +58,16 @@
 .create-button:active {
   border: inset 5px;
 }
+
+.room-create {
+  width: 450px;
+  height: 50px;
+  text-align: center;
+  font-size: 30px;
+  background-color: bisque;
+  border: outset 5px;
+}
+
+.room-create:active {
+  border: inset 5px;
+}

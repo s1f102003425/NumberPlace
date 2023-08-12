@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Loading } from 'src/components/Loading/Loading';
+import { apiClient } from 'src/utils/apiClient';
 import styles from './index.module.css';
 
 const Home = () => {
@@ -20,6 +21,7 @@ const Home = () => {
   ];
   const [isPlaying, setIsPlaying] = useState(false);
   const [timeCount, setTimeCount] = useState(0);
+  const [gameBoard, setGameBoard] = useState<number[][]>(nomalBoard);
   useEffect(() => {
     if (isPlaying) {
       const plusTimeCount = setInterval(() => {
@@ -30,7 +32,6 @@ const Home = () => {
       };
     }
   }, [timeCount, isPlaying]);
-  const [gameBoard, setGameBoard] = useState<number[][]>(nomalBoard);
   const checkRowNumber = (subX: number, subY: number, creatingBoard: number[][]) => {
     const i: number = Math.floor(Math.random() * 10);
     if (i !== 0 && !creatingBoard[subY].includes(i)) {
@@ -55,6 +56,11 @@ const Home = () => {
     setTimeCount(0);
     setIsPlaying(false);
   };
+  // const [playerScore, setPlayerScore] = useState(0);
+  const roomCreate = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    await apiClient.create.$post();
+    console.log(e);
+  };
   console.table(gameBoard);
 
   if (!hoge) return <Loading visible />;
@@ -73,14 +79,17 @@ const Home = () => {
           ))
         )}
       </div>
-      <p className={styles['button-board']}>
+      <div className={styles['button-board']}>
         <div className={styles['reset-bottun']} onClick={resetClick}>
           リセット
         </div>
         <div className={styles['create-button']} onClick={createClick}>
           生成
         </div>
-      </p>
+      </div>
+      <div className={styles['room-create']} onClick={roomCreate}>
+        登録
+      </div>
     </>
   );
 };

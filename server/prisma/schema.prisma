@@ -13,3 +13,8 @@ model Task {
   done      Boolean
   createdAt DateTime
 }
+
+model data {
+  firebaseId String @id
+  score     Int
+}
