@@ -30,9 +30,7 @@ const Home = () => {
         {gameBoard.map((row, y) =>
           row.map((value, x) => (
             <div className={styles.cell} key={`${x}-${y}`}>
-              <div className={styles.value} style={{ color: 'black' }}>
-                {value}
-              </div>
+              <div className={styles.value}>{value ? value : 0}</div>
             </div>
           ))
         )}
