@@ -19,6 +19,8 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
+  const zeroToEight: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  const oneToNine: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [isPlaying, setIsPlaying] = useState(false);
   const [timeCount, setTimeCount] = useState(0);
   const [gameBoard, setGameBoard] = useState<number[][]>(nomalBoard);
@@ -32,21 +34,56 @@ const Home = () => {
       };
     }
   }, [timeCount, isPlaying]);
+  const checkColNumber = (
+    i: number | undefined,
+    subX: number,
+    subY: number,
+    creatingBoard: number[][]
+  ) => {
+    let ok = true;
+    creatingBoard.forEach((row) => {
+      if (row[subX] === i) {
+        ok = false;
+      }
+    });
+    if (typeof i === 'number' && ok) {
+      creatingBoard[subY][subX] = i;
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const checkRowNumber = (subX: number, subY: number, creatingBoard: number[][]) => {
     const i: number = Math.floor(Math.random() * 10);
     if (i !== 0 && !creatingBoard[subY].includes(i)) {
-      creatingBoard[subY][subX] = i;
+      return i;
     } else {
       checkRowNumber(subX, subY, creatingBoard);
     }
   };
   const createClick = () => {
     const newGameBoard: number[][] = JSON.parse(JSON.stringify(gameBoard));
-    for (let y = 0; y < 9; y++) {
-      for (let x = 0; x < 9; x++) {
-        checkRowNumber(x, y, newGameBoard);
-      }
-    }
+    // for (let y = 0; y < 9; y++) {
+    //   for (let x = 0; x < 9; x++) {
+    //     const ok = checkColNumber(checkRowNumber(x, y, newGameBoard), x, y, newGameBoard);
+    //     if (!ok) {
+    //       checkColNumber(checkRowNumber(x, y, newGameBoard), x, y, newGameBoard);
+    //     }
+    //   }
+    // }
+    zeroToEight.forEach((y) => {
+      const colNumbers: number[] = [...oneToNine];
+      zeroToEight.forEach((x) => {
+        // const ok = checkColNumber(checkRowNumber(n, m, newGameBoard), n, m, newGameBoard);
+        // if (!ok) {
+        //   checkColNumber(checkRowNumber(n, m, newGameBoard), n, m, newGameBoard);
+        // }
+        const index: number = Math.floor(Math.random() * colNumbers.length);
+        newGameBoard[y][x] = colNumbers[index];
+        colNumbers.splice(index, 1);
+      });
+    });
     setGameBoard(newGameBoard);
     setIsPlaying(true);
   };
@@ -61,7 +98,6 @@ const Home = () => {
     await apiClient.create.$post();
     console.log(e);
   };
-  console.table(gameBoard);
 
   if (!hoge) return <Loading visible />;
 
