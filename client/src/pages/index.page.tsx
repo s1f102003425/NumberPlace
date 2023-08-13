@@ -34,54 +34,48 @@ const Home = () => {
       };
     }
   }, [timeCount, isPlaying]);
-  const checkColNumber = (
-    i: number | undefined,
-    subX: number,
-    subY: number,
-    creatingBoard: number[][]
+  const checkRowColNUmbers = (
+    x: number,
+    y: number,
+    colCheckBoard: number[][],
+    rowNumbers: number[],
+    newGameBoard: number[][]
   ) => {
-    let ok = true;
-    creatingBoard.forEach((row) => {
-      if (row[subX] === i) {
-        ok = false;
-      }
-    });
-    if (typeof i === 'number' && ok) {
-      creatingBoard[subY][subX] = i;
-      return true;
+    const index: number = Math.floor(Math.random() * rowNumbers.length);
+    // ここで縦軸に同じ値がないかの判定
+    if (colCheckBoard[x].includes(rowNumbers[index])) {
+      const n: number = rowNumbers[index]; // その座標に入力する値
+      newGameBoard[y][x] = n;
+      colCheckBoard[x].splice(
+        colCheckBoard[x].findIndex((i) => i === n),
+        1
+      );
+      console.log(colCheckBoard[x]);
+      // console.table(colCheckBoard);
+      rowNumbers.splice(index, 1);
     } else {
-      return false;
+      checkRowColNUmbers(x, y, colCheckBoard, rowNumbers, newGameBoard);
     }
-  };
-
-  const checkRowNumber = (subX: number, subY: number, creatingBoard: number[][]) => {
-    const i: number = Math.floor(Math.random() * 10);
-    if (i !== 0 && !creatingBoard[subY].includes(i)) {
-      return i;
-    } else {
-      checkRowNumber(subX, subY, creatingBoard);
-    }
+    //
   };
   const createClick = () => {
     const newGameBoard: number[][] = JSON.parse(JSON.stringify(gameBoard));
-    // for (let y = 0; y < 9; y++) {
-    //   for (let x = 0; x < 9; x++) {
-    //     const ok = checkColNumber(checkRowNumber(x, y, newGameBoard), x, y, newGameBoard);
-    //     if (!ok) {
-    //       checkColNumber(checkRowNumber(x, y, newGameBoard), x, y, newGameBoard);
-    //     }
-    //   }
-    // }
+    // const colCheckBoard: number[][] = Array(9).fill([...Array(9)].map((_, i) => i + 1));
+    const colCheckBoard: number[][] = [
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    ];
     zeroToEight.forEach((y) => {
-      const colNumbers: number[] = [...oneToNine];
+      const rowNumbers: number[] = [...oneToNine];
       zeroToEight.forEach((x) => {
-        // const ok = checkColNumber(checkRowNumber(n, m, newGameBoard), n, m, newGameBoard);
-        // if (!ok) {
-        //   checkColNumber(checkRowNumber(n, m, newGameBoard), n, m, newGameBoard);
-        // }
-        const index: number = Math.floor(Math.random() * colNumbers.length);
-        newGameBoard[y][x] = colNumbers[index];
-        colNumbers.splice(index, 1);
+        checkRowColNUmbers(x, y, colCheckBoard, rowNumbers, newGameBoard);
       });
     });
     setGameBoard(newGameBoard);
