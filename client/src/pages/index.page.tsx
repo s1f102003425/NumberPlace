@@ -34,30 +34,30 @@ const Home = () => {
       };
     }
   }, [timeCount, isPlaying]);
-  const checkRowColNUmbers = (
-    x: number,
-    y: number,
-    colCheckBoard: number[][],
-    rowNumbers: number[],
-    newGameBoard: number[][]
-  ) => {
-    const index: number = Math.floor(Math.random() * rowNumbers.length);
-    // ここで縦軸に同じ値がないかの判定
-    if (colCheckBoard[x].includes(rowNumbers[index])) {
-      const n: number = rowNumbers[index]; // その座標に入力する値
-      newGameBoard[y][x] = n;
-      colCheckBoard[x].splice(
-        colCheckBoard[x].findIndex((i) => i === n),
-        1
-      );
-      console.log(colCheckBoard[x]);
-      // console.table(colCheckBoard);
-      rowNumbers.splice(index, 1);
-    } else {
-      checkRowColNUmbers(x, y, colCheckBoard, rowNumbers, newGameBoard);
-    }
-    //
-  };
+  // const checkRowColNumbers = (
+  //   x: number,
+  //   y: number,
+  //   colCheckBoard: number[][],
+  //   rowNumbers: number[],
+  //   newGameBoard: number[][]
+  // ) => {
+  //   const index: number = Math.floor(Math.random() * rowNumbers.length);
+  //   // ここで縦軸に同じ値がないかの判定
+  //   if (colCheckBoard[x].includes(rowNumbers[index])) {
+  //     const n: number = rowNumbers[index]; // その座標に入力する値
+  //     newGameBoard[y][x] = n;
+  //     colCheckBoard[x].splice(
+  //       colCheckBoard[x].findIndex((i) => i === n),
+  //       1
+  //     );
+  //     console.log(colCheckBoard[x]);
+  //     // console.table(colCheckBoard);
+  //     rowNumbers.splice(index, 1);
+  //   } else {
+  //     checkRowColNumbers(x, y, colCheckBoard, rowNumbers, newGameBoard);
+  //   }
+  //   //
+  // };
   const createClick = () => {
     const newGameBoard: number[][] = JSON.parse(JSON.stringify(gameBoard));
     // const colCheckBoard: number[][] = Array(9).fill([...Array(9)].map((_, i) => i + 1));
@@ -75,10 +75,25 @@ const Home = () => {
     zeroToEight.forEach((y) => {
       const rowNumbers: number[] = [...oneToNine];
       zeroToEight.forEach((x) => {
-        checkRowColNUmbers(x, y, colCheckBoard, rowNumbers, newGameBoard);
+        const candidateNumbers = rowNumbers.filter((n) => colCheckBoard[x].includes(n));
+        const index: number = Math.floor(Math.random() * candidateNumbers.length);
+        const n = candidateNumbers[index]; //  その座標に入れる値
+        if (n === undefined) {
+          console.log(`colB:${colCheckBoard[x]}, rowNs:${rowNumbers}`);
+        }
+        newGameBoard[y][x] = n;
+        rowNumbers.splice(
+          rowNumbers.findIndex((i) => i === n),
+          1
+        );
+        colCheckBoard[x].splice(
+          colCheckBoard[x].findIndex((i) => i === n),
+          1
+        );
       });
     });
     setGameBoard(newGameBoard);
+    console.table(newGameBoard);
     setIsPlaying(true);
   };
 
@@ -102,8 +117,11 @@ const Home = () => {
         {gameBoard.map((row, y) =>
           row.map((value, x) => (
             <div className={styles.cell} key={`${x}-${y}`}>
-              <div className={styles.value} style={{ color: value === 0 ? 'beige' : 'black' }}>
-                {value}
+              <div
+                className={styles.value}
+                style={{ color: value <= 0 || value === undefined ? 'beige' : 'black' }}
+              >
+                {typeof value === 'number' ? value : -10}
               </div>
             </div>
           ))
