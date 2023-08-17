@@ -72,6 +72,7 @@ const Home = () => {
       [1, 2, 3, 4, 5, 6, 7, 8, 9],
       [1, 2, 3, 4, 5, 6, 7, 8, 9],
     ];
+    const rowBox= 
     zeroToEight.forEach((y) => {
       const rowNumbers: number[] = [...oneToNine];
       zeroToEight.forEach((x) => {
