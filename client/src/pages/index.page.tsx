@@ -5,8 +5,6 @@ import styles from './index.module.css';
 
 const Home = () => {
   const hoge = true;
-  // const newRows = 9;
-  // const newCols = 9;
   // const nomalBoard: number[][] = new Array(newRows).fill(0).map(() => new Array(newCols).fill(0));
   const nomalBoard: 0[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -34,69 +32,65 @@ const Home = () => {
       };
     }
   }, [timeCount, isPlaying]);
-  // const checkRowColNumbers = (
-  //   x: number,
-  //   y: number,
-  //   colCheckBoard: number[][],
-  //   rowNumbers: number[],
-  //   newGameBoard: number[][]
-  // ) => {
-  //   const index: number = Math.floor(Math.random() * rowNumbers.length);
-  //   // ここで縦軸に同じ値がないかの判定
-  //   if (colCheckBoard[x].includes(rowNumbers[index])) {
-  //     const n: number = rowNumbers[index]; // その座標に入力する値
-  //     newGameBoard[y][x] = n;
-  //     colCheckBoard[x].splice(
-  //       colCheckBoard[x].findIndex((i) => i === n),
-  //       1
-  //     );
-  //     console.log(colCheckBoard[x]);
-  //     // console.table(colCheckBoard);
-  //     rowNumbers.splice(index, 1);
-  //   } else {
-  //     checkRowColNumbers(x, y, colCheckBoard, rowNumbers, newGameBoard);
-  //   }
-  //   //
-  // };
+  // まず、そのマスに入る数字が行、列、３×３でダブらないかをチェックする関数をそれぞれ作成する
+  const bePlaced = (newGameBoard: number[][], x: number, y: number, numCandidate: number[]) => {
+    const index = Math.floor(Math.random() * numCandidate.length);
+    const n = numCandidate[index];
+    if (numCandidate.length === 0) {
+      console.log(`${x}-${y}：行、列、３×３のどこかでダブりが発生`);
+      return 'NG';
+    }
+    if (canBePlaced(newGameBoard, x, y, n)) {
+      newGameBoard[y][x] = n;
+    } else {
+      numCandidate.splice(index, 1);
+      bePlaced(newGameBoard, x, y, numCandidate);
+    }
+  };
+  const canBePlaced = (newGameBoard: number[][], x: number, y: number, n: number) => {
+    if (
+      checkBox(newGameBoard, x, y, n) &&
+      checkRow(newGameBoard, x, y, n) &&
+      checkCol(newGameBoard, x, y, n)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const checkBox = (newGameBoard: number[][], x: number, y: number, n: number) => {
+    const yBox = [...Array(3)].map((_, i) => i + Math.floor(y / 3) * 3);
+    const xBox = [...Array(3)].map((_, i) => i + Math.floor(x / 3) * 3);
+    let ok = true;
+    for (const row of yBox) {
+      xBox.forEach((col) => newGameBoard[row][col] === n && (ok = false));
+    }
+    return ok;
+  };
+  const checkRow = (newGameBoard: number[][], x: number, y: number, n: number) => {
+    if (newGameBoard[y].includes(n)) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+  const checkCol = (newGameBoard: number[][], x: number, y: number, n: number) => {
+    let ok = true;
+    newGameBoard.forEach((row) => row[x] === n && (ok = false));
+    return ok;
+  };
   const createClick = () => {
     const newGameBoard: number[][] = JSON.parse(JSON.stringify(gameBoard));
-    // const colCheckBoard: number[][] = Array(9).fill([...Array(9)].map((_, i) => i + 1));
-    const colCheckBoard: number[][] = [
-      [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      [1, 2, 3, 4, 5, 6, 7, 8, 9],
-    ];
-    const rowBox= 
-    zeroToEight.forEach((y) => {
-      const rowNumbers: number[] = [...oneToNine];
-      zeroToEight.forEach((x) => {
-        const candidateNumbers = rowNumbers.filter((n) => colCheckBoard[x].includes(n));
-        const index: number = Math.floor(Math.random() * candidateNumbers.length);
-        const n = candidateNumbers[index]; //  その座標に入れる値
-        if (n === undefined) {
-          console.log(`colB:${colCheckBoard[x]}, rowNs:${rowNumbers}`);
-        }
-        newGameBoard[y][x] = n;
-        rowNumbers.splice(
-          rowNumbers.findIndex((i) => i === n),
-          1
-        );
-        colCheckBoard[x].splice(
-          colCheckBoard[x].findIndex((i) => i === n),
-          1
-        );
-      });
-    });
+    zeroToEight.forEach((row) =>
+      zeroToEight.forEach((col) => {
+        const numCandidate: number[] = oneToNine.concat();
+        bePlaced(newGameBoard, col, row, numCandidate);
+      })
+    );
     setGameBoard(newGameBoard);
-    console.table(newGameBoard);
     setIsPlaying(true);
   };
+  // ここまで
 
   const resetClick = () => {
     setGameBoard(nomalBoard);
